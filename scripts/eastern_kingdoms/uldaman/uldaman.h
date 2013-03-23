@@ -7,21 +7,26 @@
 
 enum
 {
-    MAX_ENCOUNTER               = 2,
+    MAX_ENCOUNTER               = 3,
 
     TYPE_ALTAR_EVENT            = 1,
     TYPE_ARCHAEDAS              = 2,
     DATA_EVENT_STARTER          = 3,
+    TYPE_STAFF_EVENT            = 4,
+
+    SAY_IRONAYA                 = -1000156,
 
     GO_TEMPLE_DOOR_UPPER        = 124367,
     GO_TEMPLE_DOOR_LOWER        = 141869,
     GO_ANCIENT_VAULT            = 124369,
+    GO_SEAL_OF_KHAZMUL          = 124372,                   // door to Ironaya
 
     NPC_CUSTODIAN               = 7309,
     NPC_HALLSHAPER              = 7077,
     NPC_GUARDIAN                = 7076,
     NPC_VAULT_WARDER            = 10120,
     NPC_STONE_KEEPER            = 4857,
+    NPC_IRONAYA                 = 7228,
 
     PHASE_ARCHA_1               = 1,
     PHASE_ARCHA_2               = 2,
@@ -68,6 +73,7 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
 
         uint32 m_uiKeeperCooldown;
         uint32 m_uiStoneKeepersFallen;
+        uint32 m_uiSealOfKhazMulTimer;
 
         GuidList m_lWardens;
         std::map<ObjectGuid, bool> m_mKeeperMap;

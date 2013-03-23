@@ -27,7 +27,8 @@ EndScriptData
 
 instance_uldaman::instance_uldaman(Map* pMap) : ScriptedInstance(pMap),
     m_uiKeeperCooldown(5000),
-    m_uiStoneKeepersFallen(0)
+    m_uiStoneKeepersFallen(0),
+    m_uiSealOfKhazMulTimer(0)
 {
     Initialize();
 }
@@ -53,6 +54,10 @@ void instance_uldaman::OnObjectCreate(GameObject* pGo)
             if (m_auiEncounter[1] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
+        case GO_SEAL_OF_KHAZMUL:
+            if (m_auiEncounter[2] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
         default:
             return;
     }
@@ -74,6 +79,9 @@ void instance_uldaman::OnCreatureCreate(Creature* pCreature)
             // FIXME - This isAlive check is currently useless
             m_mKeeperMap[pCreature->GetObjectGuid()] = pCreature->isAlive();
             pCreature->SetNoCallAssistance(true);           // no assistance
+            break;
+        case NPC_IRONAYA:
+            m_mNpcEntryGuidStore[NPC_IRONAYA] = pCreature->GetObjectGuid();
             break;
         default:
             break;
@@ -119,6 +127,14 @@ void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
             }
             m_auiEncounter[1] = uiData;
             break;
+
+        case TYPE_STAFF_EVENT:
+            if (uiData == DONE)
+            {
+                m_uiSealOfKhazMulTimer = 26000;
+            }
+            m_auiEncounter[2] = uiData;
+            break;
     }
 
     if (uiData == DONE)
@@ -127,7 +143,7 @@ void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
 
-        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1];
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
 
         m_strInstData = saveStream.str();
         SaveToDB();
@@ -146,7 +162,7 @@ void instance_uldaman::Load(const char* chrIn)
     OUT_LOAD_INST_DATA(chrIn);
 
     std::istringstream loadStream(chrIn);
-    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1];
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
@@ -173,6 +189,8 @@ uint32 instance_uldaman::GetData(uint32 uiType) const
     {
         case TYPE_ARCHAEDAS:
             return m_auiEncounter[1];
+        case TYPE_STAFF_EVENT:
+            return m_auiEncounter[2];
     }
     return 0;
 }
@@ -306,6 +324,28 @@ void instance_uldaman::Update(uint32 uiDiff)
                     SetData(TYPE_ALTAR_EVENT, DONE);
             }
         }
+    }
+
+    if (m_uiSealOfKhazMulTimer)
+    {
+        if (m_uiSealOfKhazMulTimer <= uiDiff)
+        {
+            DoUseDoorOrButton(GO_SEAL_OF_KHAZMUL, 0, true);
+
+            if (Creature* pIronaya = GetSingleCreatureFromStorage(NPC_IRONAYA))
+            {
+                DoScriptText(SAY_IRONAYA, pIronaya);
+
+                // Not correct. She should walk along a few waypoints (this being one of them)
+                // to a point much further in the room with the KeyStone GO, but we don't
+                // have correct data for the waypoints yet.
+                pIronaya->GetMotionMaster()->MovePoint(0, -234.527, 289.121, -48.0201);
+            }
+
+            m_uiSealOfKhazMulTimer = 0;
+        }
+        else
+            m_uiSealOfKhazMulTimer -= uiDiff;
     }
 }
 

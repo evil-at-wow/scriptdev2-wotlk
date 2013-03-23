@@ -1197,6 +1197,7 @@ INSERT INTO scripted_event_id VALUES
 UPDATE creature_template SET ScriptName='boss_archaedas' WHERE entry=2748;
 UPDATE creature_template SET ScriptName='mob_archaeras_add' WHERE entry IN (7309,7076,7077,10120);
 UPDATE instance_template SET ScriptName='instance_uldaman' WHERE map=70;
+UPDATE gameobject_template SET ScriptName='go_keystone' WHERE entry=124371;
 
 /*  */
 /* ULDUAR */

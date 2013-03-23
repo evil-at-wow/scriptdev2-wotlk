@@ -17,13 +17,29 @@
 /* ScriptData
 SDName: Uldaman
 SD%Complete: 0
-SDComment: Placeholder
+SDComment: Contains Item for Ironaya door event
 SDCategory: Uldaman
 EndScriptData */
 
 #include "precompiled.h"
 #include "uldaman.h"
 
+bool GOUse_go_keystone(Player*, GameObject* pGo)
+{
+    ScriptedInstance* pInstance = static_cast<ScriptedInstance*>(pGo->GetInstanceData());
+
+    if (!pInstance || pInstance->GetData(TYPE_STAFF_EVENT) == DONE)
+        return false;
+
+    pInstance->SetData(TYPE_STAFF_EVENT, DONE);
+    return false;
+}
+
 void AddSC_uldaman()
 {
+  Script* pNewScript = new Script;
+
+  pNewScript->Name = "go_keystone";
+  pNewScript->pGOUse = &GOUse_go_keystone;
+  pNewScript->RegisterSelf();
 }

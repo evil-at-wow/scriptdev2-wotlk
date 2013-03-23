@@ -107,7 +107,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000153,'Contemptible wretch!',11338,1,0,0,'kazzak SAY_KILL2'),
 (-1000154,'The universe will be remade.',11339,1,0,0,'kazzak SAY_KILL3'),
 (-1000155,'The Legion... will never... fall.',11340,1,0,0,'kazzak SAY_DEATH'),
-(-1000156,'REUSE ME',0,0,0,0,'REUSE ME'),
+(-1000156,'None may steal the secrets of the Makers!',5851,1,0,0,'Ironaya yell when door opens'),
 (-1000157,'Invaders, you dangle upon the precipice of oblivion! The Burning Legion comes and with it comes your end.',0,1,0,0,'kazzak SAY_RAND1'),
 (-1000158,'Impudent whelps, you only delay the inevitable. Where one has fallen, ten shall rise. Such is the will of Kazzak...',0,1,0,0,'kazzak SAY_RAND2'),
 
